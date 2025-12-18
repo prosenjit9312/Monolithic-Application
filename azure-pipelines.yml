@@ -1,0 +1,79 @@
+trigger:
+- main
+
+pool:
+  name: 
+
+stages:
+  - stage: 
+    jobs:
+      - job: 
+        pool:
+        steps: 
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'infra-service'
+            backendAzureRmStorageAccountName: 'zqprosenjit'
+            backendAzureRmContainerName: 'zqprosenjit'
+            backendAzureRmKey: 'zqprosenjit'
+        
+
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'infra-service'
+  - stage: 
+    jobs:
+      - job: 
+        pool:
+        steps:
+        - task: tfsec@1
+          inputs:
+            version: 'v1.26.0'
+            debug: true
+        - task: Application security testing@2025
+          inputs:
+            projectName: 'todo-infra'
+            enableProxy: true
+            enableSastScan: true
+            enableSastBranching: false
+            generatePDFReport: true
+            vulnerabilityThreshold: true
+            failBuildForNewVulnerabilitiesEnabled: true
+            avoidDuplicateScans: true
+            enableDependencyScan: false
+
+
+  - stage: 
+    jobs:
+      - job: manualvalidation
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'prosenjitmy93@gmail.com'
+  - stage: final stage
+    jobs:
+      - job: infrastructure provisioning  
+        pool:  
+        steps:
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'infra-service'
+            backendAzureRmStorageAccountName: 'zqprosenjit'
+            backendAzureRmContainerName: 'zqprosenjit'
+            backendAzureRmKey: 'zqprosenjit'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            environmentServiceNameAzureRM: 'infra-service'
