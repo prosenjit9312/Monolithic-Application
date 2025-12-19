@@ -2,7 +2,7 @@
 #   rg1 = {
 #     name     = "infra-rg"
 #     location = "central-india"
-    
+
 #   }
 # }
 
@@ -12,7 +12,7 @@
 #     rg_name       = "Prosenjit-rg"
 #     location      = "centralindia"
 #     address_space = ["10.3.0.0/16"]
-    
+
 #     tags = {
 #         tags = { project = "new-infra", owner = "prosenjit" }
 #     }
